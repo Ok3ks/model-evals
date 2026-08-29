@@ -1,0 +1,24 @@
+[project]
+name = "model-evals"
+version = "0.1.0"
+description = "\"A repository evaluating a suite of models, both proprietary models and open-sources for specific behaviours/functions\""
+authors = [
+    {name = "ok3ks",email = "freelanceokeks@gmail.com"}
+]
+license = ""
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "pydantic-ai (>=2.35.3,<3.0.0)",
+    "inspect-petri (>=3.1.0,<4.0.0)",
+    "pydantic-logfire (>=0.0.1,<0.0.2)",
+    "marimo (>=0.24.0,<0.25.0)",
+    "dotenv (>=0.9.9,<0.10.0)",
+    "openai (>=3.6.0,<4.0.0)",
+    "tqdm (>=4.70.0,<5.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
