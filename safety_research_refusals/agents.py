@@ -198,7 +198,6 @@ async def process_batch(
     # Save to cache (only if no exceptions in results)
     if not any(isinstance(r, Exception) for r in results):
         obj = json.dumps([r.model_dump() for r in results])
-        breakpoint()
         print(obj)
 
     return results

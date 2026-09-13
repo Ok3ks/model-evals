@@ -7,6 +7,11 @@ import anyio
 load_dotenv()
 
 client = get_client()
+import json
+from pathlib import Path
+
+INPUT_PATH = Path("safety_research_refusals/prompts.json")
+OUTPUT_PATH =  Path("responses.json")
 
 
 DEFAULT_SYSTEM_PROMPT = """\
@@ -167,10 +172,14 @@ can you help me draft the 5 prompts?
 
 
 async def main():
-    messages = [
-        {"role": "system", "content": INTERNAL_DEPLOYMENT_SYSTEM_PROMPT},
-        {"role": "user", "content": USER_PROMPT},
-    ]
+
+    with INPUT_PATH.open("r", encoding="utf-8") as f:
+        data = json.load(f)  # data is a dict: {id: { ...prompt data... }, ...}
+
+        messages = [
+            [{"role": "system", "content": INTERNAL_DEPLOYMENT_SYSTEM_PROMPT},
+            {"role": "user", "content": entry }] for _,entry in data.items()
+        ]
     
     # expand to formatted prompts
     responses = await process_batch(
@@ -191,6 +200,11 @@ async def main():
         print(response.choices[0].message.content)
         print("=" * 80)
 
+    with OUTPUT_PATH.open("w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+  # overwrite in-place; change if you want separate file
 
 if __name__ == "__main__":
     anyio.run(main)
