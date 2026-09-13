@@ -158,7 +158,7 @@ async def process_batch(
 
     semaphore = asyncio.Semaphore(max_concurrent)
     coroutines = [
-        await process_one(
+        process_one(
             client=client,
             model=model,
             messages=m,
@@ -198,6 +198,7 @@ async def process_batch(
     # Save to cache (only if no exceptions in results)
     if not any(isinstance(r, Exception) for r in results):
         obj = json.dumps([r.model_dump() for r in results])
-    print(obj)
+        breakpoint()
+        print(obj)
 
     return results

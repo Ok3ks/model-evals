@@ -172,10 +172,11 @@ async def main():
         {"role": "user", "content": USER_PROMPT},
     ]
     
+    # expand to formatted prompts
     responses = await process_batch(
         client=client,
         model="anthropic/claude-opus-4.5",
-        messages_list=[messages] * 50,
+        messages_list=[messages],
         tools=TOOLS,
         max_tokens=16000,
         return_exceptions=True,
