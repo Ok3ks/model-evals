@@ -1,5 +1,4 @@
 """OpenRouter chat completions API utils."""
-
 import asyncio
 import os
 
@@ -9,6 +8,9 @@ from openai.types.chat import ChatCompletion
 from pydantic import BaseModel
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 from tqdm.asyncio import tqdm_asyncio
+from pydantic_ai import Agent
+from pydantic_ai.models.openrouter import OpenRouterModel
+from pydantic_ai.providers.openrouter import OpenRouterProvider
 import json
 
 load_dotenv()
@@ -201,3 +203,24 @@ async def process_batch(
         print(obj)
 
     return results
+
+
+
+async def run_agent(name:str):
+    "Returns a pydantic client of the model specified"
+    model = OpenRouterModel(name,
+    provider=OpenRouterProvider(api_key=os.getenv("OPENROUTER_API_KEY")),
+)
+    # 'anthropic/claude-sonnet-4.6',
+    agent = Agent(model)  # defined in pydantic_ai docs,
+    user_input = input("User:")
+    history = []
+    while user_input != "":
+        async with agent:
+            response = await agent.run(user_prompt=user_input, message_history=history)
+            print(response.output)
+            history = response.all_messages()
+            user_input = input("__")
+
+if __name__ == "__main__":
+    asyncio.run(run_agent("anthropic/claude-sonnet-4.6"))
